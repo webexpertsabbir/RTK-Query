@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { fatchProducts } from "./productsApi";
+
 
 const initialState = {
     products: [],
@@ -8,10 +10,11 @@ const initialState = {
 }
 
 export const getProducts = createAsyncThunk("products/getProducts", async () => {
-    const res = await fetch("products.json");
-    const data = await res.json();
+    // const res = await fetch("products.json");
+    // const data = await res.json();
+    const products = fatchProducts()
     // console.log(data)
-    return data;
+    return products;
 })
 
 
