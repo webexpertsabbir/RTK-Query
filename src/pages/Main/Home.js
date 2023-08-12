@@ -2,26 +2,37 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle, toggleBrands } from "../../features/filter/filteSlice";
-import { getProducts } from "../../features/products/productsSlice";
+import { useGetProductsQuery } from "../../features/api/apiSlice";
+
+
 
 const Home = () => {
   // const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
+
   const filter = useSelector(state => state.filter);
-  const { products, isLoading } = useSelector(state => state.products);
+  // const { products, isLoading } = useSelector(state => state.products);
   const { brands, stock } = filter;
 
-  useEffect(() => {
-    // fetch("products.json")
-    //   .then((res) => res.json())
-    //   .then((data) => setProducts(data));
-    dispatch(getProducts());
-  }, []);
+  // useEffect(() => {
+  //   // fetch("products.json")
+  //   //   .then((res) => res.json())
+  //   //   .then((data) => setProducts(data));
+  //   dispatch(getProducts());
+  // }, []);
+
+  const { data, isError, isLoading, isSuccess, error } = useGetProductsQuery();
+
+
+
+  const products = data?.data;
+  console.log(products)
+
 
   const activeClass = "text-white  bg-indigo-500 border-white";
 
   let content;
-  if(isLoading){
+  if (isLoading) {
     content = <h1>Loading...</h1>
   }
   if (products.length) {
