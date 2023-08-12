@@ -24,10 +24,12 @@ export const addProduct = createAsyncThunk("products/addProducts", async (data) 
     return products;
 })
 
-export const removeProduct = createAsyncThunk("products/removeProduct", async (id) => {
-    const products = deleteProduct(id);
+export const removeProduct = createAsyncThunk("products/removeProduct", async (id, thunkAPI) => {
+    const products = await deleteProduct(id);
+    thunkAPI.dispatch(removeFromList(id))
     return products;
 })
+
 
 
 export const porductsSlice = createSlice({
@@ -39,6 +41,11 @@ export const porductsSlice = createSlice({
         },
         toggleDeleteSuccess: state => {
             state.postSuccess = false;
+        },
+        removeFromList: (state, action) => {
+            state.products = state.products.filter(
+                product => product._id !== action.payload
+            );
         }
     },
     extraReducers: (builder) => {
@@ -57,6 +64,7 @@ export const porductsSlice = createSlice({
                 state.isError = true;
                 state.error = action.error.message;
             })
+            
             .addCase(addProduct.pending, (state, action) => {
                 state.isLoading = true;
                 state.postSuccess = false;
@@ -74,7 +82,6 @@ export const porductsSlice = createSlice({
                 state.isError = true;
                 state.error = action.error.message;
             })
-
 
             .addCase(removeProduct.pending, (state, action) => {
                 state.isLoading = true;
@@ -96,6 +103,6 @@ export const porductsSlice = createSlice({
     }
 })
 
-export const { togglePostSuccess } = porductsSlice.actions;
+export const { togglePostSuccess, toggleDeleteSuccess, removeFromList } = porductsSlice.actions;
 
 export default porductsSlice.reducer;
